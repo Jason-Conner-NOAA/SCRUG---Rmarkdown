@@ -46,6 +46,10 @@ knitr::kable(summary)
 
 ```
 
+<br>
+
+Here is an example of in-line R code: there are `r dataRows` rows of data in this table.
+
 
 
 # GGplot
