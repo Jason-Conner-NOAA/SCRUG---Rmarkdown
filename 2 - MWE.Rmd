@@ -1,0 +1,67 @@
+---
+title: "2 - MWE"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# I like to put all of my attached libraries up here
+library(tidyverse)
+
+# Make a color palette
+colorRamp <- viridisLite::viridis(n=2)
+
+knitr::opts_chunk$set(echo = TRUE)
+options(stringsAsFactors=FALSE)
+```
+
+# Minimum Working Examples - MWE
+
+In *1-Basic.Rmd* we used a default dataset (cars) included in R to test drive Rmarkdown. But let's try creating our own test data. Much of this material is taken from Jared Knowles' blog: <https://www.jaredknowles.com/journal/2013/5/27/writing-a-minimal-working-example-mwe-in-r>.
+
+Following, we will make a basic data frame of simulated pollock lengths.
+
+```{r data}
+dataRows <- 250
+lengthData <- data.frame(id = seq(1, dataRows), 
+                        sex = sample(c("male", "female"), size = dataRows, replace = TRUE), 
+                        length = abs(rnorm(dataRows, mean = 357, sd = 169))
+)
+
+head(lengthData)
+```
+
+# Make a table
+
+There are several packages that help you format tables (<https://rmarkdown.rstudio.com/lesson-7.html>). The function *kable* is included in the package **knitr** which is already an Rmarkdown dependency.
+
+```{r table1}
+summary <- lengthData %>%
+   group_by(sex) %>%
+   summarize(Mean = mean(length),
+             SD = sd(length),
+             Count = n()
+   ) 
+
+knitr::kable(summary)
+
+```
+
+
+
+# GGplot
+
+Here are a couple of ggplot outputs. Note that we use the color palette created above.
+
+```{r boxplot}
+ggplot(lengthData, aes(x=sex,y=length, fill=sex)) +
+   geom_boxplot() +
+   scale_fill_manual(values=colorRamp) +
+   theme_bw()
+```
+
+```{r histogram}
+ggplot(lengthData, aes(x=length, fill=sex)) +
+   geom_histogram(bins=40, position="dodge") +
+   scale_fill_manual(values=colorRamp) +
+   theme_bw()
+```
